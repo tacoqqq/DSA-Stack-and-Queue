@@ -14,7 +14,7 @@ class Stack {
         this.top = null
     }
 
-    push(item){
+    push(data){
         //if empty stack
         if (this.top == null){
             this.top = new _Node(data , null)
@@ -106,32 +106,52 @@ For version 1, the parentheses you need to consider are ( and ). Finding a close
 
 function parenthesisChecker(str){
     let stack = new Stack()
+    
     //loop through the string
-    for (let i = 0 ; i < str.length ;i++){
+    for (let i = 0 ; i < str.length ; i++){
       //if '(' , put it in the stack
       if ( str[i] == '(' ){
         stack.push(i)
       } 
-  
-      if (str[i] == ')' && stack.top !== null){
-        stack.pop()
-      } else if ( str[i] == ')' && stack.top == null){
-        return `Error: you are missing a (. Location of the close is at index ${i}; `
+      
+      if (str[i] == ')'){
+        if (stack.top !== null){
+            stack.pop()
+        } else {
+            return `Error: you are missing a (. Location of the close is at index ${i} `
+        }
       } 
-    } 
-  
-    let location = ''
-    if (stack.top !== null){
-      while (stack.top !== null){
-      let index = stack.pop()
-      location = location + '\n' + `Error: you are missing a ). Location of the open is at index ${index} ; `
-      return location
-      }
-    } else {
-      return true
     }
+
+    let location = ''
+
+    while (stack.top !== null){
+        let index = stack.pop()
+        location = location + '\n' + `Error: you are missing a ). Location of the open is at index ${index} ; `
+        return location
+    }
+
+    return 'it passes the test!'
   }
-  
+
+/*
+ try {
+  try_statements
+}
+[catch (exception_var_1 if condition_1) { // non-standard
+  catch_statements_1
+}]
+
+...
+[catch (exception_var_2) {
+  catch_statements_2
+}]
+[finally {
+  finally_statements
+}]
+*/ 
+
+
 /*
 5. Sort stack
 Write a program to sort a stack such that the smallest items are on the top (in ascending order). You can use an additional stack, but you may not use any other data structure (such as an array, or linked list).

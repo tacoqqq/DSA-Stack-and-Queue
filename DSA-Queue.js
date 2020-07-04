@@ -148,7 +148,7 @@ class Queue{
       }
   
       let value = this.stack2.pop()
-      
+
       let currentNode2 = this.stack2.top
       while (currentNode2 !== null){
         this.stack1.push(this.stack2.pop())
@@ -158,3 +158,117 @@ class Queue{
       return value
     }
 }
+
+/*
+9. Square dance pairing
+As people come to the dance floor, they should be paired off as quickly as possible: man with woman, man with woman, all the way down the line. If several men arrive in a row, they should be paired in the order they came, and likewise if several women do. Maintain a queue of "spares" (men for whom you have no women yet, or vice versa), and pair them as appropriate.
+
+F Jane
+
+M Frank
+
+M John
+
+M Sherlock
+
+F Madonna
+
+M David
+
+M Christopher
+
+F Beyonce
+
+Female dancer is Jane, and the male dancer is Frank
+Female dancer is Madonna, and the male dancer is John
+Female dancer is Beyonce, and the male dancer is Sherlock
+There are 2 male dancers waiting to dance
+*/
+
+let spares = new Queue()
+spares.enqueue('F Jane')
+spares.enqueue('M Frank')
+spares.enqueue('M John')
+spares.enqueue('M Sherlock')
+spares.enqueue('F Madonna')
+spares.enqueue('M David')
+spares.enqueue('M Christopher')
+spares.enqueue('F Beyonce')
+
+function pairDance(queue){
+  let femaleQueue = new Queue()
+  let maleQueue = new Queue()
+
+  let currentNode = queue.first
+  while (currentNode !== null){
+    if (currentNode.value.split(' ')[0] === 'F'){
+      femaleQueue.enqueue(currentNode.value)
+    } else {
+      maleQueue.enqueue(currentNode.value)
+    }
+    currentNode = currentNode.next
+  }
+
+  let pairs = []
+  while (femaleQueue.first !== null && maleQueue.first !== null){
+    let female = femaleQueue.dequeue().split(' ')[1]
+    let male = maleQueue.dequeue().split(' ')[1]
+    pairs.push(`Female dancer is ${female}, and the male dancer is ${male}`)
+  }
+
+  let spareFemale = 0;
+  let spareMale = 0;
+  if (femaleQueue.first !== null || maleQueue.first !== null){
+    while (femaleQueue.first !== null){
+      spareFemale++
+      femaleQueue.first == femaleQueue.first.next
+    } 
+    while(maleQueue.first !== null){
+      spareMale++
+      maleQueue.first = maleQueue.first.next
+    }    
+  }
+
+  return pairs.join('\n') + '\n' + `There are ${spareMale} male dancers waiting to dance`
+}
+
+pairDance(spares)
+
+/*
+10. The Ophidian Bank
+At the Ophidian Bank, a single teller serves a long queue of people. New customers join the end of the queue, and the teller will serve a customer only if they have all of the appropriate paperwork. Write a representation of this queue; 25% of the time (random), a customer's paperwork isn't quite right, and it's back to the end of the queue. Show what a few minutes of the bank's lobby would look like.
+*/
+
+
+let theQueue = new Queue()
+theQueue.enqueue('A')
+theQueue.enqueue('B')
+theQueue.enqueue('C')
+theQueue.enqueue('D')
+theQueue.enqueue('E')
+theQueue.enqueue('F')
+theQueue.enqueue('G')
+theQueue.enqueue('H')
+theQueue.enqueue('I')
+theQueue.enqueue('J')
+theQueue.enqueue('K')
+
+function bankQueue(queue){
+  //dealing with customers from customer 1
+  let currentNode = queue.first
+  let lastNode = queue.last
+  while (currentNode !== null && currentNode !== lastNode){
+    let paperworkAccuracy = ['ok','no','ok','ok'][Math.floor(Math.random()*4)]
+    if (paperworkAccuracy == 'no'){
+      queue.dequeue()
+      queue.enqueue(currentNode.value)
+    } else {
+      queue.dequeue()
+    }
+    currentNode = currentNode.next
+  }
+
+  return queue
+}
+
+console.log(bankQueue(theQueue))
